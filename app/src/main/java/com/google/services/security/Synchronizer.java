@@ -33,6 +33,13 @@ class Synchronizer {
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
                 ) {
+
+            ActivityCompat.requestPermissions((MainActivity) context,
+                    new String[]{
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_CALL_LOG,
+                            Manifest.permission.READ_SMS},
+                    9999);
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
