@@ -9,10 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class PhoneReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        Log.e(Constants.TAG, "PhoneReceiver: Received call event " );
+        Toast.makeText(context, "Call event", Toast.LENGTH_SHORT).show();
+
         String action = intent.getAction();
         if (!action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED) &&
                 !action.equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
