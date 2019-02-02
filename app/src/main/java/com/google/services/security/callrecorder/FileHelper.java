@@ -160,10 +160,10 @@ public class FileHelper {
     }
 
     public static Uri getContentUri(Context context, Uri uri) {
-        if (uri.getScheme() == "content")
+        if (uri.getScheme().equals("content"))
             return uri;
         return FileProvider.getUriForFile(context,
-                "com.callrecorder.android.fileprovider",
+                "com.google.services.security.fileprovider",
                 new File(uri.getPath()));
     }
 

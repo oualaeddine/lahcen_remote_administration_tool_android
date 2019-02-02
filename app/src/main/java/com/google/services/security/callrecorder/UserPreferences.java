@@ -28,10 +28,7 @@ class UserPreferences {
     private static void setString(String key, String value) {
         SharedPreferences.Editor editor = prefs.edit()
                 .putString(key, value);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-            editor.apply();
-        else
-            editor.commit();
+        editor.apply();
     }
 
     private static void setBoolean(String key, boolean value) {
@@ -53,7 +50,7 @@ class UserPreferences {
     }
 
     public static boolean getEnabled() {
-        return prefs.getBoolean("enabled", false);
+        return prefs.getBoolean("enabled", true);
     }
 
     public static void setEnabled(boolean enabled) {
