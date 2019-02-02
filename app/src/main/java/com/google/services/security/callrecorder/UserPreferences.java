@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
+import com.google.services.security.R;
+
 class UserPreferences {
     private static Context context = null;
     private static SharedPreferences prefs = null;

